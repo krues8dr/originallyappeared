@@ -192,13 +192,22 @@ add_shortcode( 'originallyappeared', 'originallyappeared_shortcode' );
 /**
  * Extra header for canonical links
  */
+remove_action('wp_head', 'rel_canonical');
 function originallyappeared_meta_tags() {
-	$meta = get_originallyappeared_meta();
-	if(isset($meta['site_url'])) {
-		echo '<link rel="canonical" href="' . $meta['site_url'] . '" />' . "\n";
+	if(is_single()) {
+		$meta = get_originallyappeared_meta();
+		if(isset($meta['site_url']) && strlen($meta['site_url'])) {
+			echo '<link rel="canonical" href="' . $meta['site_url'] . '" />' . "\n";
+		}
+		else {
+			rel_canonical();
+		}
+		if(isset($meta['no_index']) && $meta['no_index']) {
+			echo '<meta name="robots" content="noindex" />' . "\n";
+		}
 	}
-	if(isset($meta['no_index']) && $meta['no_index']) {
-		echo '<meta name="robots" content="noindex" />' . "\n";
+	else {
+		rel_canonical();
 	}
 }
 add_action('wp_head', 'originallyappeared_meta_tags');
