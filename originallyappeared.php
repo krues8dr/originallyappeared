@@ -153,20 +153,20 @@ function get_originallyappeared_meta($post = null) {
 
 function get_originallyappeared($post = null){
 	$meta = get_originallyappeared_meta($post);
+	if($meta['site_url'] && $meta['name']) {
+		if($meta['custom_message']) {
+			$message = $meta['custom_message'];
+		}
+		else {
+			$message = __( 'This post originally appeared on <a href="[SITE_URL]">[NAME]</a>.',
+				'originallyappeared_textdomain' );
+		}
 
-	if($meta['custom_message']) {
-		$message = $meta['custom_message'];
+		// Replace our data.
+		foreach($meta as $key => $value) {
+			$message = str_replace('[' . strtoupper($key) . ']', $value, $message);
+		}
 	}
-	else {
-		$message = __( 'This post originally appeared on <a href="[SITE_URL]">[NAME]</a>.',
-			'originallyappeared_textdomain' );
-	}
-
-	// Replace our data.
-	foreach($meta as $key => $value) {
-		$message = str_replace('[' . strtoupper($key) . ']', $value, $message);
-	}
-
 	return $message;
 }
 
